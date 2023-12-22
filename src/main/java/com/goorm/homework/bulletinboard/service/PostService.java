@@ -1,6 +1,7 @@
 package com.goorm.homework.bulletinboard.service;
 
 import com.goorm.homework.bulletinboard.domain.Post;
+import com.goorm.homework.bulletinboard.dto.CommentDto;
 import com.goorm.homework.bulletinboard.dto.PostDto;
 import com.goorm.homework.bulletinboard.exception.PostNotFoundException;
 import com.goorm.homework.bulletinboard.repository.PostRepository;
@@ -15,7 +16,6 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-@Transactional(readOnly = true)
 public class PostService {
     private final PostRepository postRepository;
 
@@ -42,11 +42,23 @@ public class PostService {
     public PostDto findPostById(Long postId) {
         Optional<Post> optionalPost = postRepository.findByIdAndSoftDeletedIsFalse(postId);
 
+
+
         if (optionalPost.isPresent()) {
             Post post = optionalPost.get();
+
+            List<CommentDto> commentDtos = post.getComments().stream()
+                    .map(comment -> CommentDto.builder()
+                            .id(comment.getId())
+                            .content(comment.getContent())
+                            .build())
+                    .collect(Collectors.toList());
+
             return PostDto.builder()
                     .id(post.getId())
                     .title(post.getTitle())
+                    .content(post.getContent())
+                    .comments(commentDtos)
                     .build();
         } else {
             throw new PostNotFoundException("Post not found with ID: " + postId);

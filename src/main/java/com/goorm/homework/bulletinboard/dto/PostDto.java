@@ -25,5 +25,5 @@ public class PostDto {
 //    private Boolean isDeleted;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<CommentDto> commentDtos;
+    private List<CommentDto> comments;
 }

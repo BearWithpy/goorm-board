@@ -2,6 +2,7 @@ package com.goorm.homework.bulletinboard.controller;
 
 
 import com.goorm.homework.bulletinboard.dto.ApiResponse;
+import com.goorm.homework.bulletinboard.dto.CommentDto;
 import com.goorm.homework.bulletinboard.dto.PostDto;
 import com.goorm.homework.bulletinboard.service.CommentService;
 
@@ -31,9 +32,13 @@ public class CommentController {
 
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<?> createComment(@RequestBody @Validated PostDto postRequest){
-        return ResponseEntity.ok().build();
+    @PostMapping("/create/{postId}")
+    public ResponseEntity<?> createComment(@PathVariable Long postId, @RequestBody @Validated CommentDto commentRequest) {
+
+        Long commentId = commentService.createComment(postId, commentRequest);
+
+        ApiResponse response = new ApiResponse(HttpStatus.CREATED.value(), "Create Comment - postId : " + postId + " commentId: " + commentId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/update/{postId}")

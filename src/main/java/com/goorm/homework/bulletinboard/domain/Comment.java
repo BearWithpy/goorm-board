@@ -1,10 +1,14 @@
 package com.goorm.homework.bulletinboard.domain;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment {
 
     @Id
@@ -16,4 +20,10 @@ public class Comment {
     private Post post;
 
     private String content;
+
+    @Builder
+    public Comment(String content, Post post){
+        this.content = content;
+        this.post = post;
+    }
 }
